@@ -6,6 +6,13 @@ The :only, :except, :methods, and :include options are supported.
 
 It too ads the :plist option to the ActiveRecord::Base#render method
 
+
+Install
+=======
+
+script/plugin install git://github.com/jeena/plistifier.git
+
+
 Example
 =======
 
