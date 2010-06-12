@@ -4,7 +4,8 @@ Plistifier
 Adds the ActiveRecord#to_plist and Array#to_plist methods similar to ActiveRecord#to_xml.
 The :only, :except, :methods, and :include options are supported.
 
-It too ads the :plist option to the ActiveRecord::Base#render method
+It too ads the :plist option to the ActiveRecord::Base#render method. With help of that
+you get binary plist files which you can easy use in your iPhone.
 
 
 Install
@@ -15,6 +16,8 @@ script/plugin install git://github.com/jeena/plistifier.git
 
 Example
 =======
+
+In your PostController use for example:
 
 	def index
 	  @posts = Post.all
@@ -35,7 +38,13 @@ Example
 			format.plist { render :plist => @post }
 	  end
 	end
+	
+On the iPhone use for example:
 
+	NSURL *url = [NSURL URLWithString:@"http://example.com/posts.plist"];
+	NSArray *posts = [[NSArray alloc] initWithContentsOfURL:url];
+	NSLog(@"Title: %@", [[posts objectAtIndex:0] objectForKey:@"title"]);
+	
 
 Thanks
 ======
