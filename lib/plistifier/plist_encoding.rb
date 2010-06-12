@@ -56,7 +56,6 @@ module Plistifier #:nodoc:
           attrs[name] = @record.read_attribute(name)
         end
         attrs
-        # @record.attributes(:only => attribute_names)
       end
 
       # Returns 1st level methods as a hash.
