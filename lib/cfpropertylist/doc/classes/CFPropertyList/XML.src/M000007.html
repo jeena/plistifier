@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>to_str (CFPropertyList::XML)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File rbXMLCFPropertyList.rb, line 29</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">to_str</span>(<span class="ruby-identifier">opts</span>={})
+      <span class="ruby-identifier">doc</span> = <span class="ruby-constant">LibXML</span><span class="ruby-operator">::</span><span class="ruby-constant">XML</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>
+
+      <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">root</span> = <span class="ruby-constant">LibXML</span><span class="ruby-operator">::</span><span class="ruby-constant">XML</span><span class="ruby-operator">::</span><span class="ruby-constant">Node</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">'plist'</span>)
+      <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">encoding</span> = <span class="ruby-constant">LibXML</span><span class="ruby-operator">::</span><span class="ruby-constant">XML</span><span class="ruby-operator">::</span><span class="ruby-constant">Encoding</span><span class="ruby-operator">::</span><span class="ruby-constant">UTF_8</span>
+
+      <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">root</span>[<span class="ruby-value str">'version'</span>] = <span class="ruby-value str">'1.0'</span>
+      <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">root</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:root</span>].<span class="ruby-identifier">to_xml</span>()
+
+      <span class="ruby-comment cmt"># ugly hack, but there's no other possibility I know</span>
+      <span class="ruby-identifier">str</span> = <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">to_s</span>(<span class="ruby-identifier">:indent</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:formatted</span>])
+      <span class="ruby-identifier">str1</span> = <span class="ruby-constant">String</span>.<span class="ruby-identifier">new</span>
+      <span class="ruby-identifier">first</span> = <span class="ruby-keyword kw">false</span>
+      <span class="ruby-identifier">str</span>.<span class="ruby-identifier">each_line</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-operator">|</span><span class="ruby-identifier">line</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">str1</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">line</span>
+        <span class="ruby-keyword kw">unless</span>(<span class="ruby-identifier">first</span>) <span class="ruby-keyword kw">then</span>
+          <span class="ruby-identifier">str1</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value str">&quot;&lt;!DOCTYPE plist PUBLIC \&quot;-//Apple Computer//DTD PLIST 1.0//EN\&quot; \&quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd\&quot;&gt;\n&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">line</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/^\s*&lt;\?xml/</span>
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-identifier">first</span> = <span class="ruby-keyword kw">true</span>
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">str1</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

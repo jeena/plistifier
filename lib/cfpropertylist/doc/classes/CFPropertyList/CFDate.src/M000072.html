@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>parse_date (CFPropertyList::CFDate)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File rbCFTypes.rb, line 92</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-constant">CFDate</span>.<span class="ruby-identifier">parse_date</span>(<span class="ruby-identifier">val</span>)
+      <span class="ruby-comment cmt"># 2009-05-13T20:23:43Z</span>
+      <span class="ruby-identifier">val</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp re">%r{^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})Z$}</span>
+      <span class="ruby-identifier">year</span>,<span class="ruby-identifier">month</span>,<span class="ruby-identifier">day</span>,<span class="ruby-identifier">hour</span>,<span class="ruby-identifier">min</span>,<span class="ruby-identifier">sec</span> = <span class="ruby-identifier">$1</span>, <span class="ruby-identifier">$2</span>, <span class="ruby-identifier">$3</span>, <span class="ruby-identifier">$4</span>, <span class="ruby-identifier">$5</span>, <span class="ruby-identifier">$6</span>
+      <span class="ruby-keyword kw">return</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">utc</span>(<span class="ruby-identifier">year</span>,<span class="ruby-identifier">month</span>,<span class="ruby-identifier">day</span>,<span class="ruby-identifier">hour</span>,<span class="ruby-identifier">min</span>,<span class="ruby-identifier">sec</span>).<span class="ruby-identifier">getlocal</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>guess (CFPropertyList)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File rbCFPropertyList.rb, line 72</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">guess</span>(<span class="ruby-identifier">object</span>, <span class="ruby-identifier">options</span> = {})
+    <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">nil?</span>
+
+    <span class="ruby-keyword kw">if</span>(<span class="ruby-identifier">object</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Fixnum</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Integer</span>)) <span class="ruby-keyword kw">then</span>
+      <span class="ruby-keyword kw">return</span> <span class="ruby-constant">CFInteger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">object</span>)
+    <span class="ruby-keyword kw">elsif</span>(<span class="ruby-identifier">object</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Float</span>)) <span class="ruby-keyword kw">then</span>
+      <span class="ruby-keyword kw">return</span> <span class="ruby-constant">CFReal</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">object</span>)
+    <span class="ruby-keyword kw">elsif</span>(<span class="ruby-identifier">object</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">TrueClass</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">FalseClass</span>)) <span class="ruby-keyword kw">then</span>
+      <span class="ruby-keyword kw">return</span> <span class="ruby-constant">CFBoolean</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">object</span>)
+    <span class="ruby-keyword kw">elsif</span>(<span class="ruby-identifier">object</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">String</span>)) <span class="ruby-keyword kw">then</span>
+      <span class="ruby-keyword kw">return</span> <span class="ruby-constant">CFString</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">object</span>)
+    <span class="ruby-keyword kw">elsif</span>(<span class="ruby-identifier">object</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Time</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">DateTime</span>)) <span class="ruby-keyword kw">then</span>
+      <span class="ruby-keyword kw">return</span> <span class="ruby-constant">CFDate</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">object</span>)
+    <span class="ruby-keyword kw">elsif</span>(<span class="ruby-identifier">object</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">IO</span>)) <span class="ruby-keyword kw">then</span>
+      <span class="ruby-keyword kw">return</span> <span class="ruby-constant">CFData</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">object</span>.<span class="ruby-identifier">read</span>, <span class="ruby-constant">CFData</span><span class="ruby-operator">::</span><span class="ruby-constant">DATA_RAW</span>)
+    <span class="ruby-keyword kw">elsif</span>(<span class="ruby-identifier">object</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Array</span>)) <span class="ruby-keyword kw">then</span>
+      <span class="ruby-identifier">ary</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+      <span class="ruby-identifier">object</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-operator">|</span><span class="ruby-identifier">o</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">ary</span>.<span class="ruby-identifier">push</span> <span class="ruby-constant">CFPropertyList</span>.<span class="ruby-identifier">guess</span>(<span class="ruby-identifier">o</span>, <span class="ruby-identifier">options</span>)
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-keyword kw">return</span> <span class="ruby-constant">CFArray</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">ary</span>)
+    <span class="ruby-keyword kw">elsif</span>(<span class="ruby-identifier">object</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Hash</span>)) <span class="ruby-keyword kw">then</span>
+      <span class="ruby-identifier">hsh</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
+      <span class="ruby-identifier">object</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-operator">|</span><span class="ruby-identifier">k</span>,<span class="ruby-identifier">v</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">k</span> = <span class="ruby-identifier">k</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">k</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Symbol</span>)
+        <span class="ruby-identifier">hsh</span>[<span class="ruby-identifier">k</span>] = <span class="ruby-constant">CFPropertyList</span>.<span class="ruby-identifier">guess</span>(<span class="ruby-identifier">v</span>, <span class="ruby-identifier">options</span>)
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-keyword kw">return</span> <span class="ruby-constant">CFDictionary</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">hsh</span>)
+    <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">options</span>[<span class="ruby-identifier">:convert_unknown_to_string</span>]
+      <span class="ruby-keyword kw">return</span> <span class="ruby-constant">CFString</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">object</span>.<span class="ruby-identifier">to_s</span>)
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

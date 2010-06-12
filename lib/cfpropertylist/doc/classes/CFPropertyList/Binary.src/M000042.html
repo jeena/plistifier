@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>int_to_binary (CFPropertyList::Binary)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File rbBinaryCFPropertyList.rb, line 545</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">int_to_binary</span>(<span class="ruby-identifier">value</span>)
+      <span class="ruby-identifier">nbytes</span> = <span class="ruby-value">0</span>
+      <span class="ruby-identifier">nbytes</span> = <span class="ruby-value">1</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0x</span><span class="ruby-constant">FF</span> <span class="ruby-comment cmt"># 1 byte integer</span>
+      <span class="ruby-identifier">nbytes</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0x</span><span class="ruby-constant">FFFF</span> <span class="ruby-comment cmt"># 4 byte integer</span>
+      <span class="ruby-identifier">nbytes</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0x</span><span class="ruby-constant">FFFFFFFF</span> <span class="ruby-comment cmt"># 8 byte integer</span>
+      <span class="ruby-identifier">nbytes</span> = <span class="ruby-value">3</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">0</span> <span class="ruby-comment cmt"># 8 byte integer, since signed</span>
+
+      <span class="ruby-identifier">bdata</span> = <span class="ruby-constant">Binary</span>.<span class="ruby-identifier">type_bytes</span>(<span class="ruby-value str">&quot;1&quot;</span>, <span class="ruby-identifier">nbytes</span>) <span class="ruby-comment cmt"># 1 is 0001, type indicator for integer</span>
+      <span class="ruby-identifier">buff</span> = <span class="ruby-value str">&quot;&quot;</span>
+
+      <span class="ruby-keyword kw">if</span>(<span class="ruby-identifier">nbytes</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">3</span>) <span class="ruby-keyword kw">then</span>
+        <span class="ruby-identifier">fmt</span> = <span class="ruby-value str">&quot;N&quot;</span>
+
+        <span class="ruby-keyword kw">if</span>(<span class="ruby-identifier">nbytes</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>) <span class="ruby-keyword kw">then</span>
+          <span class="ruby-identifier">fmt</span> = <span class="ruby-value str">&quot;C&quot;</span>
+        <span class="ruby-keyword kw">elsif</span>(<span class="ruby-identifier">nbytes</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>)
+          <span class="ruby-identifier">fmt</span> = <span class="ruby-value str">&quot;n&quot;</span>
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-identifier">buff</span> = [<span class="ruby-identifier">value</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-identifier">fmt</span>)
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-comment cmt"># 64 bit signed integer; we need the higher and the lower 32 bit of the value</span>
+        <span class="ruby-identifier">high_word</span> = <span class="ruby-identifier">value</span> <span class="ruby-operator">&gt;&gt;</span> <span class="ruby-value">32</span>
+        <span class="ruby-identifier">low_word</span> = <span class="ruby-identifier">value</span> <span class="ruby-operator">&amp;</span> <span class="ruby-value">0x</span><span class="ruby-constant">FFFFFFFF</span>
+        <span class="ruby-identifier">buff</span> = [<span class="ruby-identifier">high_word</span>,<span class="ruby-identifier">low_word</span>].<span class="ruby-identifier">pack</span>(<span class="ruby-value str">&quot;NN&quot;</span>)
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">bdata</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">buff</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

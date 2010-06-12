@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>import_xml (CFPropertyList::XML)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File rbXMLCFPropertyList.rb, line 64</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">import_xml</span>(<span class="ruby-identifier">node</span>)
+      <span class="ruby-identifier">ret</span> = <span class="ruby-keyword kw">nil</span>
+
+      <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">name</span>
+      <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'dict'</span>
+        <span class="ruby-identifier">hsh</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
+        <span class="ruby-identifier">key</span> = <span class="ruby-keyword kw">nil</span>
+
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">children?</span> <span class="ruby-keyword kw">then</span>
+          <span class="ruby-identifier">node</span>.<span class="ruby-identifier">children</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span>
+            <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span>
+
+            <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;key&quot;</span> <span class="ruby-keyword kw">then</span>
+              <span class="ruby-identifier">key</span> = <span class="ruby-identifier">get_value</span>(<span class="ruby-identifier">n</span>)
+            <span class="ruby-keyword kw">else</span>
+              <span class="ruby-identifier">raise</span> <span class="ruby-constant">CFFormatError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">&quot;Format error!&quot;</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">key</span>.<span class="ruby-identifier">nil?</span>
+              <span class="ruby-identifier">hsh</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">import_xml</span>(<span class="ruby-identifier">n</span>)
+              <span class="ruby-identifier">key</span> = <span class="ruby-keyword kw">nil</span>
+            <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-identifier">ret</span> = <span class="ruby-constant">CFDictionary</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">hsh</span>)
+
+      <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'array'</span>
+        <span class="ruby-identifier">ary</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">children?</span> <span class="ruby-keyword kw">then</span>
+          <span class="ruby-identifier">node</span>.<span class="ruby-identifier">children</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span>
+            <span class="ruby-operator">|</span><span class="ruby-identifier">n</span><span class="ruby-operator">|</span>
+            <span class="ruby-identifier">ary</span>.<span class="ruby-identifier">push</span> <span class="ruby-identifier">import_xml</span>(<span class="ruby-identifier">n</span>)
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+
+        <span class="ruby-identifier">ret</span> = <span class="ruby-constant">CFArray</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">ary</span>)
+
+      <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'true'</span>
+        <span class="ruby-identifier">ret</span> = <span class="ruby-constant">CFBoolean</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">true</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'false'</span>
+        <span class="ruby-identifier">ret</span> = <span class="ruby-constant">CFBoolean</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword kw">false</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'real'</span>
+        <span class="ruby-identifier">ret</span> = <span class="ruby-constant">CFReal</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">get_value</span>(<span class="ruby-identifier">node</span>).<span class="ruby-identifier">to_f</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'integer'</span>
+        <span class="ruby-identifier">ret</span> = <span class="ruby-constant">CFInteger</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">get_value</span>(<span class="ruby-identifier">node</span>).<span class="ruby-identifier">to_i</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'string'</span>
+        <span class="ruby-identifier">ret</span> = <span class="ruby-constant">CFString</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">get_value</span>(<span class="ruby-identifier">node</span>))
+      <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'data'</span>
+        <span class="ruby-identifier">ret</span> = <span class="ruby-constant">CFData</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">get_value</span>(<span class="ruby-identifier">node</span>))
+      <span class="ruby-keyword kw">when</span> <span class="ruby-value str">'date'</span>
+        <span class="ruby-identifier">ret</span> = <span class="ruby-constant">CFDate</span>.<span class="ruby-identifier">new</span>(<span class="ruby-constant">CFDate</span>.<span class="ruby-identifier">parse_date</span>(<span class="ruby-identifier">get_value</span>(<span class="ruby-identifier">node</span>)))
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">ret</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

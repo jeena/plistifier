@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>load (CFPropertyList::Binary)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File rbBinaryCFPropertyList.rb, line 13</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">load</span>(<span class="ruby-identifier">opts</span>)
+      <span class="ruby-ivar">@unique_table</span> = {}
+      <span class="ruby-ivar">@count_objects</span> = <span class="ruby-value">0</span>
+      <span class="ruby-ivar">@string_size</span> = <span class="ruby-value">0</span>
+      <span class="ruby-ivar">@int_size</span> = <span class="ruby-value">0</span>
+      <span class="ruby-ivar">@misc_size</span> = <span class="ruby-value">0</span>
+      <span class="ruby-ivar">@object_refs</span> = <span class="ruby-value">0</span>
+
+      <span class="ruby-ivar">@written_object_count</span> = <span class="ruby-value">0</span>
+      <span class="ruby-ivar">@object_table</span> = []
+      <span class="ruby-ivar">@object_ref_size</span> = <span class="ruby-value">0</span>
+
+      <span class="ruby-ivar">@offsets</span> = []
+
+      <span class="ruby-identifier">fd</span> = <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-keyword kw">if</span>(<span class="ruby-identifier">opts</span>.<span class="ruby-identifier">has_key?</span>(<span class="ruby-identifier">:file</span>)) <span class="ruby-keyword kw">then</span>
+        <span class="ruby-identifier">fd</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:file</span>],<span class="ruby-value str">&quot;rb&quot;</span>)
+        <span class="ruby-identifier">file</span> = <span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:file</span>]
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-identifier">fd</span> = <span class="ruby-constant">StringIO</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">opts</span>[<span class="ruby-identifier">:data</span>],<span class="ruby-value str">&quot;rb&quot;</span>)
+        <span class="ruby-identifier">file</span> = <span class="ruby-value str">&quot;&lt;string&gt;&quot;</span>
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-comment cmt"># first, we read the trailer: 32 byte from the end</span>
+      <span class="ruby-identifier">fd</span>.<span class="ruby-identifier">seek</span>(<span class="ruby-value">-32</span>,<span class="ruby-constant">IO</span><span class="ruby-operator">::</span><span class="ruby-constant">SEEK_END</span>)
+      <span class="ruby-identifier">buff</span> = <span class="ruby-identifier">fd</span>.<span class="ruby-identifier">read</span>(<span class="ruby-value">32</span>)
+
+      <span class="ruby-identifier">offset_size</span>, <span class="ruby-identifier">object_ref_size</span>, <span class="ruby-identifier">number_of_objects</span>, <span class="ruby-identifier">top_object</span>, <span class="ruby-identifier">table_offset</span> = <span class="ruby-identifier">buff</span>.<span class="ruby-identifier">unpack</span> <span class="ruby-value str">&quot;x6CCx4Nx4Nx4N&quot;</span>
+
+      <span class="ruby-comment cmt"># after that, get the offset table</span>
+      <span class="ruby-identifier">fd</span>.<span class="ruby-identifier">seek</span>(<span class="ruby-identifier">table_offset</span>, <span class="ruby-constant">IO</span><span class="ruby-operator">::</span><span class="ruby-constant">SEEK_SET</span>)
+      <span class="ruby-identifier">coded_offset_table</span> = <span class="ruby-identifier">fd</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">number_of_objects</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">offset_size</span>)
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">CFFormatError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;#{file}: Format error!&quot;</span>) <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">coded_offset_table</span>.<span class="ruby-identifier">bytesize</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">number_of_objects</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">offset_size</span>
+
+      <span class="ruby-ivar">@count_objects</span> = <span class="ruby-identifier">number_of_objects</span>
+
+      <span class="ruby-comment cmt"># decode offset table</span>
+      <span class="ruby-identifier">formats</span> = [<span class="ruby-value str">&quot;&quot;</span>,<span class="ruby-value str">&quot;C*&quot;</span>,<span class="ruby-value str">&quot;n*&quot;</span>,<span class="ruby-value str">&quot;(H6)*&quot;</span>,<span class="ruby-value str">&quot;N*&quot;</span>]
+      <span class="ruby-ivar">@offsets</span> = <span class="ruby-identifier">coded_offset_table</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-identifier">formats</span>[<span class="ruby-identifier">offset_size</span>])
+      <span class="ruby-keyword kw">if</span>(<span class="ruby-identifier">offset_size</span> <span class="ruby-operator">==</span> <span class="ruby-value">3</span>) <span class="ruby-keyword kw">then</span>
+        <span class="ruby-value">0</span>.<span class="ruby-identifier">upto</span>(<span class="ruby-ivar">@offsets</span>.<span class="ruby-identifier">count</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@offsets</span>[<span class="ruby-identifier">i</span>] = <span class="ruby-ivar">@offsets</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">to_i</span>(<span class="ruby-value">16</span>) }
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-ivar">@object_ref_size</span> = <span class="ruby-identifier">object_ref_size</span>
+      <span class="ruby-identifier">val</span> = <span class="ruby-identifier">read_binary_object_at</span>(<span class="ruby-identifier">file</span>,<span class="ruby-identifier">fd</span>,<span class="ruby-identifier">top_object</span>)
+
+      <span class="ruby-identifier">fd</span>.<span class="ruby-identifier">close</span>
+      <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">val</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

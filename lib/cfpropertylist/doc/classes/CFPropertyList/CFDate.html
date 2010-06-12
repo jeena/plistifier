@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class: CFPropertyList::CFDate</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Class</strong></td>
+          <td class="class-name-in-header">CFPropertyList::CFDate</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../../files/rbCFTypes_rb.html">
+                rbCFTypes.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+                <a href="CFType.html">
+                CFType
+               </a>
+            </td>
+        </tr>
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+This class holds Time values. While Apple uses seconds since 2001, the rest
+of the world uses seconds since 1970. So if you access value directly, you
+get the Time class. If you access via <a
+href="CFDate.html#M000075">get_value</a> you either geht the timestamp or
+the Apple timestamp
+</p>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000071">date_string</a>&nbsp;&nbsp;
+      <a href="#M000075">get_value</a>&nbsp;&nbsp;
+      <a href="#M000073">new</a>&nbsp;&nbsp;
+      <a href="#M000072">parse_date</a>&nbsp;&nbsp;
+      <a href="#M000074">set_value</a>&nbsp;&nbsp;
+      <a href="#M000077">to_binary</a>&nbsp;&nbsp;
+      <a href="#M000076">to_xml</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+    <div id="constants-list">
+      <h3 class="section-bar">Constants</h3>
+
+      <div class="name-list">
+        <table summary="Constants">
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">TIMESTAMP_APPLE</td>
+          <td>=</td>
+          <td class="context-item-value">0</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">TIMESTAMP_UNIX</td>
+          <td>=</td>
+          <td class="context-item-value">1;</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">DATE_DIFF_APPLE_UNIX</td>
+          <td>=</td>
+          <td class="context-item-value">978307200</td>
+        </tr>
+        </table>
+      </div>
+    </div>
+
+
+
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Class methods</h3>
+
+      <div id="method-M000071" class="method-detail">
+        <a name="M000071"></a>
+
+        <div class="method-heading">
+          <a href="CFDate.src/M000071.html" target="Code" class="method-signature"
+            onclick="popupCode('CFDate.src/M000071.html');return false;">
+          <span class="method-name">date_string</span><span class="method-args">(val)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+create a <a href="XML.html">XML</a> date strimg from a time object
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000073" class="method-detail">
+        <a name="M000073"></a>
+
+        <div class="method-heading">
+          <a href="CFDate.src/M000073.html" target="Code" class="method-signature"
+            onclick="popupCode('CFDate.src/M000073.html');return false;">
+          <span class="method-name">new</span><span class="method-args">(value = nil,format=CFDate::TIMESTAMP_UNIX)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+set value to defined state
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000072" class="method-detail">
+        <a name="M000072"></a>
+
+        <div class="method-heading">
+          <a href="CFDate.src/M000072.html" target="Code" class="method-signature"
+            onclick="popupCode('CFDate.src/M000072.html');return false;">
+          <span class="method-name">parse_date</span><span class="method-args">(val)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+parse a <a href="XML.html">XML</a> date string
+</p>
+        </div>
+      </div>
+
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000075" class="method-detail">
+        <a name="M000075"></a>
+
+        <div class="method-heading">
+          <a href="CFDate.src/M000075.html" target="Code" class="method-signature"
+            onclick="popupCode('CFDate.src/M000075.html');return false;">
+          <span class="method-name">get_value</span><span class="method-args">(format=CFDate::TIMESTAMP_UNIX)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+get timestamp, either UNIX or Apple timestamp
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000074" class="method-detail">
+        <a name="M000074"></a>
+
+        <div class="method-heading">
+          <a href="CFDate.src/M000074.html" target="Code" class="method-signature"
+            onclick="popupCode('CFDate.src/M000074.html');return false;">
+          <span class="method-name">set_value</span><span class="method-args">(value,format=CFDate::TIMESTAMP_UNIX)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+set value with timestamp, either Apple or UNIX
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000077" class="method-detail">
+        <a name="M000077"></a>
+
+        <div class="method-heading">
+          <a href="CFDate.src/M000077.html" target="Code" class="method-signature"
+            onclick="popupCode('CFDate.src/M000077.html');return false;">
+          <span class="method-name">to_binary</span><span class="method-args">(bplist)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+convert to binary
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000076" class="method-detail">
+        <a name="M000076"></a>
+
+        <div class="method-heading">
+          <a href="CFDate.src/M000076.html" target="Code" class="method-signature"
+            onclick="popupCode('CFDate.src/M000076.html');return false;">
+          <span class="method-name">to_xml</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+convert to <a href="XML.html">XML</a>
+</p>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

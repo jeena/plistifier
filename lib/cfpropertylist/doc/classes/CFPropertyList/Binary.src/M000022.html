@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>read_binary_real (CFPropertyList::Binary)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File rbBinaryCFPropertyList.rb, line 158</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">read_binary_real</span>(<span class="ruby-identifier">fname</span>,<span class="ruby-identifier">fd</span>,<span class="ruby-identifier">length</span>)
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">CFFormatError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;Real greater than 8 bytes: #{length}&quot;</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">3</span>
+
+      <span class="ruby-identifier">nbytes</span> = <span class="ruby-value">1</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">length</span>
+      <span class="ruby-identifier">val</span> = <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-identifier">buff</span> = <span class="ruby-identifier">fd</span>.<span class="ruby-identifier">read</span>(<span class="ruby-identifier">nbytes</span>)
+
+      <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">length</span>
+      <span class="ruby-keyword kw">when</span> <span class="ruby-value">0</span> <span class="ruby-keyword kw">then</span> <span class="ruby-comment cmt"># 1 byte float? must be an error</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">CFFormatError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;got #{length+1} byte float, must be an error!&quot;</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-value">1</span> <span class="ruby-keyword kw">then</span> <span class="ruby-comment cmt"># 2 byte float? must be an error</span>
+        <span class="ruby-identifier">raise</span> <span class="ruby-constant">CFFormatError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;got #{length+1} byte float, must be an error!&quot;</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-value">2</span> <span class="ruby-keyword kw">then</span>
+        <span class="ruby-identifier">val</span> = <span class="ruby-identifier">buff</span>.<span class="ruby-identifier">reverse</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-value str">&quot;f&quot;</span>)
+        <span class="ruby-identifier">val</span> = <span class="ruby-identifier">val</span>[<span class="ruby-value">0</span>]
+      <span class="ruby-keyword kw">when</span> <span class="ruby-value">3</span> <span class="ruby-keyword kw">then</span>
+        <span class="ruby-identifier">val</span> = <span class="ruby-identifier">buff</span>.<span class="ruby-identifier">reverse</span>.<span class="ruby-identifier">unpack</span>(<span class="ruby-value str">&quot;d&quot;</span>)
+        <span class="ruby-identifier">val</span> = <span class="ruby-identifier">val</span>[<span class="ruby-value">0</span>]
+      <span class="ruby-keyword kw">end</span>
+
+      <span class="ruby-keyword kw">return</span> <span class="ruby-constant">CFReal</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">val</span>)
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
