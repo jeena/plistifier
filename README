@@ -49,7 +49,7 @@ On the iPhone use for example:
 Thanks
 ======
 
-This plugin uses Christian Kruses CFPropertyList http://rubyforge.org/projects/cfpropertylist/
+This plugin uses Christian Kruses CFPropertyList http://github.com/ckruse/CFPropertyList
 to generate Plists.
 
 This plugin started as a copy of http://github.com/chuyeow/jsonifier/ I just changed it to
