@@ -29,7 +29,7 @@ module ActionController
       if plist
      
         if plist.is_a? Array
-          filename = plist.first.class.name          
+          filename = plist.first.class.name.pluralize        
         else
           filename = "#{plist.class.name}-#{plist.id}"
         end
