@@ -22,7 +22,11 @@ end
 module ActionController
   class Base
     def render_with_plist(options = nil, extra_options = {}, &block)
-      if plist = options[:plist]
+      
+      plist = nil
+      plist = options[:plist] unless options.nil?
+      
+      if plist
      
         if plist.is_a? Array
           filename = plist.first.class.name          
