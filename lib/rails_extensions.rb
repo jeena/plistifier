@@ -14,7 +14,7 @@ class Array
     end
     
     plist = CFPropertyList::List.new
-    plist.value = CFPropertyList.guess(array)
+    plist.value = CFPropertyList.guess(array, :convert_unknown_to_string => true)
     plist.to_str(options[:plist_format])
   end  
 end

@@ -8,7 +8,7 @@ module Plistifier #:nodoc:
       hashifier = PlistHashifier.new(self, options)
       
       plist = CFPropertyList::List.new
-      plist.value = CFPropertyList.guess(hashifier.to_hash)
+      plist.value = CFPropertyList.guess(hashifier.to_hash, :convert_unknown_to_string => true)
       plist.to_str(options[:plist_format])
     end
     
