@@ -28,7 +28,7 @@ module ActionController
       
       if plist
      
-        unless options.nil? or options[:plist_filename].blank?
+        if options[:plist_filename].blank?
           if plist.is_a? Array
             filename = plist.first.class.name.pluralize + ".plist"     
           else
