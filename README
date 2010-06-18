@@ -2,7 +2,8 @@ Plistifier
 ==========
 
 Adds the ActiveRecord#to_plist and Array#to_plist methods similar to ActiveRecord#to_xml.
-The :only, :except, :methods, and :include options are supported.
+The :only, :except, :methods, and :include options are supported. Additionally you can use
+the :plist_filename option to change the default name for download.
 
 It too ads the :plist option to the ActiveRecord::Base#render method. With help of that
 you get binary plist files which you can easy use in your iPhone.
@@ -36,6 +37,14 @@ In your PostController use for example:
 	    format.html # show.html.erb
 	    format.xml  { render :xml => @post }
 			format.plist { render :plist => @post }
+	  end
+	end
+	
+	def show
+	  @post = Post.find(params[:id])
+
+	  respond_to do |format|
+			format.plist { render :plist => @post, :plist_filename => "a-testfile.plist" }
 	  end
 	end
 	

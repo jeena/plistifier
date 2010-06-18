@@ -30,9 +30,9 @@ module ActionController
      
         unless options.nil? or options[:plist_filename].blank?
           if plist.is_a? Array
-            filename = plist.first.class.name.pluralize        
+            filename = plist.first.class.name.pluralize + ".plist"     
           else
-            filename = "#{plist.class.name}-#{plist.id}"
+            filename = "#{plist.class.name}-#{plist.id}.plist"
           end
         else
           filename = options[:plist_filename]
@@ -41,7 +41,7 @@ module ActionController
         send_data(
           plist.to_plist(options),
           :type => Mime::PLIST, 
-          :filename => "#{filename}.plist", 
+          :filename => filename, 
           :disposition => 'inline'
         )
 
