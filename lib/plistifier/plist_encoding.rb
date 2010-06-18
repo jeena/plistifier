@@ -2,14 +2,14 @@ require "cfpropertylist/rbCFPropertyList"
 
 module Plistifier #:nodoc:
   module PlistEncoding
-    def to_plist(options = {})
-      options[:plist_format] ||= CFPropertyList::List::FORMAT_BINARY 
 
-      hashifier = PlistHashifier.new(self, options)
-      
-      plist = CFPropertyList::List.new
-      plist.value = CFPropertyList.guess(hashifier.to_hash, :convert_unknown_to_string => true)
-      plist.to_str(options[:plist_format])
+    # str = IO String
+    # reading plist.load(:data => str)
+
+    attr_accessor :plist_item_options
+
+    def to_plist_item
+      to_hash(plist_item_options)
     end
     
     def to_hash(options = {})

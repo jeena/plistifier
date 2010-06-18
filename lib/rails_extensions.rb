@@ -1,45 +1,40 @@
 require "cfpropertylist/rbCFPropertyList"
 
-class Array
-  def to_plist(options = {})
-    options[:plist_format] ||= CFPropertyList::List::FORMAT_BINARY 
-    
-    array = []
-    self.each do |a|
-      if a.is_a? ActiveRecord::Base
-        array << a.to_hash(options)
-      else
-        array << a
-      end
-    end
-    
-    plist = CFPropertyList::List.new
-    plist.value = CFPropertyList.guess(array, :convert_unknown_to_string => true)
-    plist.to_str(options[:plist_format])
-  end  
-end
-
 module ActionController
   class Base
     def render_with_plist(options = nil, extra_options = {}, &block)
       
-      plist = nil
-      plist = options[:plist] unless options.nil?
-      
+      plist = options.delete(:plist) unless options.nil?
+
       if plist
-     
-        if options[:plist_filename].blank?
+        
+        unless filename = options.delete(:plist_filename)
           if plist.is_a? Array
-            filename = plist.first.class.name.pluralize + ".plist"     
+            filename = plist.first.class.name.pluralize + ".plist"
           else
             filename = "#{plist.class.name}-#{plist.id}.plist"
           end
-        else
-          filename = options[:plist_filename]
+        end
+
+        unless options.nil?
+          if plist.is_a? Array
+            plist.each do |entry|
+              if entry.respond_to? :plist_item_options=
+                entry.plist_item_options = options
+              end
+            end
+          end
         end
         
+        plist_options = {
+          :converter_method => :to_plist_item,
+          :convert_unknown_to_string => true
+        }
+
+        data = plist.is_a?(CFPropertyList::List) ? plist : plist.to_plist(plist_options)
+        
         send_data(
-          plist.to_plist(options),
+          data,
           :type => Mime::PLIST, 
           :filename => filename, 
           :disposition => 'inline'
