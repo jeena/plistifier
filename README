@@ -8,7 +8,6 @@ the :plist_filename option to change the default name for download.
 It too ads the :plist option to the ActiveRecord::Base#render method. With help of that
 you get binary plist files which you can easy use in your iPhone.
 
-
 Install
 =======
 
@@ -53,7 +52,23 @@ On the iPhone use for example:
 	NSURL *url = [NSURL URLWithString:@"http://example.com/posts.plist"];
 	NSArray *posts = [[NSArray alloc] initWithContentsOfURL:url];
 	NSLog(@"Title: %@", [[posts objectAtIndex:0] objectForKey:@"title"]);
-	
+
+
+Known problems
+==============
+
+There is one problem though, If you want to do something like this it will crash:
+
+	@post = Post.all
+	myplist = { :foo => "bar", :post => @post }.to_plist
+
+You have to convert the ActionRecord @post to a hash which CFPropertyList
+understands and can convert for example like:
+
+	myplist = { :foo => "bar", :post => @post.to_hash }.to_plist
+
+ActionRecord#to_hash is a method the plugin adds.	
+
 
 Thanks
 ======
