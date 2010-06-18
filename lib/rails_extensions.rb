@@ -11,8 +11,10 @@ module ActionController
         unless filename = options.delete(:plist_filename)
           if plist.is_a? Array
             filename = plist.first.class.name.pluralize + ".plist"
-          else
+          elsif plist.respond_to?(:id)
             filename = "#{plist.class.name}-#{plist.id}.plist"
+          else
+            filename = "#{plist.class.name}-data.plist"
           end
         end
 
