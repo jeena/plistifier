@@ -28,10 +28,14 @@ module ActionController
       
       if plist
      
-        if plist.is_a? Array
-          filename = plist.first.class.name.pluralize        
+        unless options.nil? or options[:plist_filename].blank?
+          if plist.is_a? Array
+            filename = plist.first.class.name.pluralize        
+          else
+            filename = "#{plist.class.name}-#{plist.id}"
+          end
         else
-          filename = "#{plist.class.name}-#{plist.id}"
+          filename = options[:plist_filename]
         end
         
         send_data(
