@@ -7,10 +7,11 @@ module ActionController
       plist = options.delete(:plist) unless options.nil?
 
       if plist
-
+        
+        response.headers["Location"] = options[:location] unless options[:location].blank?
         options[:content_type] ||= Mime::PLIST
         options[:disposition] ||= "inline"
-        
+
         if options[:plist_filename].blank?
           if plist.is_a? Array
             options[:plist_filename] = plist.first.class.name.pluralize + ".plist"
@@ -28,7 +29,7 @@ module ActionController
             end
           end
         end
-        
+
         data = plist
         unless plist.is_a?(CFPropertyList::List)
           plist_options = {
@@ -37,7 +38,7 @@ module ActionController
           }
           data = plist.to_plist(plist_options)
         end
-        
+
         send_data(
           data,
           :type => options[:content_type], 
