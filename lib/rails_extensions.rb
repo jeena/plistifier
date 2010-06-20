@@ -7,39 +7,43 @@ module ActionController
       plist = options.delete(:plist) unless options.nil?
 
       if plist
+
+        options[:content_type] ||= Mime::PLIST
+        options[:disposition] ||= "inline"
         
-        unless filename = options.delete(:plist_filename)
+        if options[:plist_filename].blank?
           if plist.is_a? Array
-            filename = plist.first.class.name.pluralize + ".plist"
+            options[:plist_filename] = plist.first.class.name.pluralize + ".plist"
           elsif plist.respond_to?(:id)
-            filename = "#{plist.class.name}-#{plist.id}.plist"
+            options[:plist_filename] = "#{plist.class.name}-#{plist.id}.plist"
           else
-            filename = "#{plist.class.name}-data.plist"
+            options[:plist_filename] = "#{plist.class.name}-data.plist"
           end
         end
 
-        unless options.nil?
-          if plist.is_a? Array
-            plist.each do |entry|
-              if entry.respond_to? :plist_item_options=
-                entry.plist_item_options = options
-              end
+        if plist.is_a? Array
+          plist.each do |entry|
+            if entry.respond_to? :plist_item_options=
+              entry.plist_item_options = options
             end
           end
         end
         
-        plist_options = {
-          :converter_method => :to_plist_item,
-          :convert_unknown_to_string => true
-        }
-
-        data = plist.is_a?(CFPropertyList::List) ? plist : plist.to_plist(plist_options)
+        data = plist
+        unless plist.is_a?(CFPropertyList::List)
+          plist_options = {
+            :converter_method => :to_plist_item,
+            :convert_unknown_to_string => true
+          }
+          data = plist.to_plist(plist_options)
+        end
         
         send_data(
           data,
-          :type => Mime::PLIST, 
-          :filename => filename, 
-          :disposition => 'inline'
+          :type => options[:content_type], 
+          :filename => options[:plist_filename], 
+          :disposition => options[:disposition],
+          :status => options[:status]
         )
 
       else
