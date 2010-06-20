@@ -1,12 +1,17 @@
 Plistifier
 ==========
 
-Adds the ActiveRecord#to_plist and Array#to_plist methods similar to ActiveRecord#to_xml.
-The :only, :except, :methods, and :include options are supported. Additionally you can use
-the :plist_filename option to change the default name for download.
+Adds the possibility to talk to a rails app via (Binary) Property Lists
+http://developer.apple.com/mac/library/documentation/Darwin/Reference/ManPages/man5/plist.5.html
 
-It too ads the :plist option to the ActiveRecord::Base#render method. With help of that
-you get binary plist files which you can easy use in your iPhone.
+It is designed to work as the JSON format but on the iPhone it is easier to use,
+much faster, because Plist is smaller, therefore it doesn't need any third party
+libraries for parsing like JSON, or difficult SAX-style parsing like XML.
+
+It adds the ActiveRecord#to_plist, Array#to_plist and Hash#to_plist methods similar to
+ActiveRecord#to_json. The :only, :except, :methods, and :include options are supported
+on ActiveRecord and Array with ActiveRecord items.
+
 
 Install
 =======
@@ -16,6 +21,9 @@ script/plugin install git://github.com/jeena/plistifier.git
 
 Example
 =======
+
+Getting data from rails
+-----------------------
 
 In your PostController use for example:
 
@@ -54,14 +62,15 @@ On the iPhone use for example:
 	NSLog(@"Title: %@", [[posts objectAtIndex:0] objectForKey:@"title"]);
 	
 	
+Sending data to rails
+---------------------
+
 It is possible to send a plist back into rails. On the iPhone you have to do for example:
 
 	NSDictionary *aPost = [[NSDictionary alloc] initWithObjectsAndKeys:
 													@"A title", @"title",
 													@"Some text for body", @"body", nil];
-
 	NSDictionary *aDict = [[NSDictionary alloc] initWithObjectsAndKeys:aPost, @"post", nil];
-
 	NSData *data = [NSPropertyListSerialization dataFromPropertyList:aDict
 															  format:NSPropertyListBinaryFormat_v1_0
 											errorDescription:nil];
@@ -73,6 +82,11 @@ It is possible to send a plist back into rails. On the iPhone you have to do for
 	[request setHTTPBody:data];
 
 	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+	[connection release];
+	[request release];
+	[data release];
+	[aDict release];
+	[aPost release];
 
 And on the rails side:
 
