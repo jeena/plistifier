@@ -121,5 +121,8 @@ to generate Plists.
 This plugin started as a copy of http://github.com/chuyeow/jsonifier/ I just changed it to
 support and added the CFPropertyList stuff.
 
+Thanks Alexandre Bournier from http://pixyapps.com for his great ideas on how to improve
+the functionality and the help with testing.
+
 
 Copyright (c) 2010 Jeena Paradies, released under the MIT license
