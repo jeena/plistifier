@@ -52,6 +52,48 @@ On the iPhone use for example:
 	NSURL *url = [NSURL URLWithString:@"http://example.com/posts.plist"];
 	NSArray *posts = [[NSArray alloc] initWithContentsOfURL:url];
 	NSLog(@"Title: %@", [[posts objectAtIndex:0] objectForKey:@"title"]);
+	
+	
+It is possible to send a plist back into rails. On the iPhone you have to do for example:
+
+	NSDictionary *aPost = [[NSDictionary alloc] initWithObjectsAndKeys:
+													@"A title", @"title",
+													@"Some text for body", @"body", nil];
+
+	NSDictionary *aDict = [[NSDictionary alloc] initWithObjectsAndKeys:aPost, @"post", nil];
+
+	NSData *data = [NSPropertyListSerialization dataFromPropertyList:aDict
+															  format:NSPropertyListBinaryFormat_v1_0
+											errorDescription:nil];
+
+	NSURL *url = [NSURL URLWithString:@"http://example.com/posts.plist"];
+	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+	[request setHTTPMethod:@"POST"];
+	[request setValue:@"application/plist" forHTTPHeaderField:@"Content-Type"];
+	[request setHTTPBody:data];
+
+	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+
+And on the rails side:
+
+	def create
+	  @post = Post.new(params[:post])
+
+	  respond_to do |format|
+	    if @post.save
+	      flash[:notice] = 'Post was successfully created.'
+	      format.html { redirect_to(@post) }
+	      format.xml  { render :xml => @post, :status => :created, :location => @post }
+	      format.plist  { render :plist => @post, :status => :created, :location => @post }
+	    else
+	      format.html { render :action => "new" }
+	      format.xml  { render :xml => @post.errors, :status => :unprocessable_entity }
+				format.plist { render :plist => @post.errors, :status => :unprocessable_entity }
+	    end
+	  end
+	end
+
+So you see the params variable is the property list you just send from your iPhone.
 
 
 Known problems
