@@ -3,10 +3,15 @@ require "cfpropertylist/rbCFPropertyList"
 module Plistifier #:nodoc:
   module PlistEncoding
 
-    # str = IO String
-    # reading plist.load(:data => str)
-
     attr_accessor :plist_item_options
+    
+    def to_plist(options = {})
+      plist_options = {
+        :converter_method => :to_plist_item,
+        :convert_unknown_to_string => true
+      }
+      to_hash(options).to_plist(plist_options)
+    end
 
     def to_plist_item
       to_hash(plist_item_options)
