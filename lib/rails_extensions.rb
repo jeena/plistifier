@@ -1,5 +1,3 @@
-require "cfpropertylist/rbCFPropertyList"
-
 module ActionController
   class Base
     def render_with_plist(options = nil, extra_options = {}, &block)

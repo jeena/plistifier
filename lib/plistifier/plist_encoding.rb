@@ -1,5 +1,3 @@
-require "cfpropertylist/rbCFPropertyList"
-
 module Plistifier #:nodoc:
   module PlistEncoding
 

@@ -17,6 +17,7 @@ options are supported on ActiveRecord and Array with ActiveRecord items.
 Install
 =======
 
+sudo gem install --remote CFPropertyList
 script/plugin install git://github.com/jeena/plistifier.git
 
 
