@@ -4,13 +4,14 @@ Plistifier
 Adds the possibility to talk to a rails app via (Binary) Property Lists
 http://developer.apple.com/mac/library/documentation/Darwin/Reference/ManPages/man5/plist.5.html
 
-It is designed to work as the JSON format but on the iPhone it is easier to use,
-much faster, because Plist is smaller, therefore it doesn't need any third party
-libraries for parsing like JSON, or difficult SAX-style parsing like XML.
+It is designed to work like the JSON format. On the iPhone it is easier to
+use, much faster; because Plists are smaller; and it doesn't need any third
+party libraries for parsing like JSON, or difficult SAX-style parsing like
+XML.
 
-It adds the ActiveRecord#to_plist, Array#to_plist and Hash#to_plist methods similar to
-ActiveRecord#to_json. The :only, :except, :methods, and :include options are supported
-on ActiveRecord and Array with ActiveRecord items.
+It adds the ActiveRecord#to_plist, Array#to_plist and Hash#to_plist methods
+similar to ActiveRecord#to_json. The :only, :except, :methods, and :include
+options are supported on ActiveRecord and Array with ActiveRecord items.
 
 
 Install
