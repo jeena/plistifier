@@ -1,3 +1,5 @@
+gem "cfpropertylist", ">=2.0.9"
+
 require 'plistifier/plist_encoding'
 require 'rails_extensions'
 
