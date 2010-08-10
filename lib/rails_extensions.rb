@@ -2,10 +2,8 @@ module ActionController
   class Base
     def render_with_plist(options = nil, extra_options = {}, &block)
       
-      plist = options.delete(:plist) unless options.nil?
+      if options and options.is_a?(Hash) and plist = options.delete(:plist)
 
-      if plist
-        
         response.headers["Location"] = options[:location] unless options[:location].blank?
         options[:content_type] ||= Mime::PLIST
         options[:disposition] ||= "inline"
