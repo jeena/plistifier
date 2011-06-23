@@ -72,12 +72,12 @@ Sending data to rails
 It is possible to send a plist back into rails. On the iPhone you have to do for example:
 
 	NSDictionary *aPost = [[NSDictionary alloc] initWithObjectsAndKeys:
-													@"A title", @"title",
-													@"Some text for body", @"body", nil];
+					@"A title", @"title",
+					@"Some text for body", @"body", nil];
 	NSDictionary *aDict = [[NSDictionary alloc] initWithObjectsAndKeys:aPost, @"post", nil];
 	NSData *data = [NSPropertyListSerialization dataFromPropertyList:aDict
-															  format:NSPropertyListBinaryFormat_v1_0
-											errorDescription:nil];
+				format:NSPropertyListBinaryFormat_v1_0
+				errorDescription:nil];
 
 	NSURL *url = [NSURL URLWithString:@"http://example.com/posts.plist"];
 	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
