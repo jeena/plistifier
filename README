@@ -20,7 +20,8 @@ Install
 sudo gem install --remote CFPropertyList
 script/plugin install git://github.com/jeena/plistifier.git
 
-If you should get the error "Unknown class NilClass! Try using :convert_unknown_to_string if you want to use unknown object types!" you need to upgrade to rake-0.8.7.
+If you should get the error "Unknown class NilClass! Try using :convert_unknown_to_string
+if you want to use unknown object types!" you need to upgrade to rake-0.8.7.
 
 
 Example
