@@ -1,6 +1,8 @@
 Plistifier
 ==========
 
+This plugin is for Rails 2 and will not work in Rails 3 untill I or someone else will rewrite it.
+
 Adds the possibility to talk to a rails app via (Binary) Property Lists
 http://developer.apple.com/mac/library/documentation/Darwin/Reference/ManPages/man5/plist.5.html
 
